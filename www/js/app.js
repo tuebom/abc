@@ -272,11 +272,11 @@ var swiper = app.swiper.create('.swiper-container', {
 swiper.autoplay.start();
 
 // cek selisih waktu, jika lebih tampilkan form login
-// if (hrs > 8) {
+if (hrs > 8) {
 
-//   var ls = app.loginScreen.create({ el: '#my-login-screen' });
-//   ls.open(false);
-// }
+  var ls = app.loginScreen.create({ el: '#my-login-screen' });
+  ls.open(false);
+}
 
 var ac_share = app.actions.create({
   buttons: [
