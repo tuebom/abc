@@ -1,1 +1,1 @@
-# aplikasi bagi cepek :D
+# aplikasi berbagi cepek :D

@@ -1,0 +1,5 @@
+node_modules/
+www/backup/
+www/backup2/
+www/pages/backup/
+server.js
