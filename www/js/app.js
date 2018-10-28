@@ -121,48 +121,56 @@ var app  = new Framework7({
 
         // var mbrid = localStorage.getItem('mbrid');
         var nohp  = localStorage.getItem('nohp');
-        var pin   = localStorage.getItem('pin');
-        var gcmid = localStorage.getItem('RegId');
-        // console.log('mbrid ', mbrid)
 
-        // this.data.mbrid = mbrid;
-        this.data.nohp = nohp;
-        this.data.pin = pin;
+        if (nohp === "") {
 
-        var formData = {};
-        // formData.mbrid = mbrid;
-        formData.nohp  = nohp;
-        formData.pin   = pin;
-        formData.gcmid = gcmid;
-  
-        this.preloader.show();
+          var ls = app.loginScreen.create({ el: '#my-login-screen' });
+          ls.open(false);
+        } else {
 
-        this.request.post('http://212.24.111.23/abc/auth/login', formData, function (res) {
+          var pin   = localStorage.getItem('pin');
+          var gcmid = localStorage.getItem('RegId');
+          // console.log('mbrid ', mbrid)
+
+          // this.data.mbrid = mbrid;
+          this.data.nohp = nohp;
+          this.data.pin = pin;
+
+          var formData = {};
+          // formData.mbrid = mbrid;
+          formData.nohp  = nohp;
+          formData.pin   = pin;
+          formData.gcmid = gcmid;
     
-          app.preloader.hide();
-          var data = JSON.parse(res);
-          console.log('data: ', data)
-      
-          if (data.status) {
+          this.preloader.show();
 
-            // set data token
-            app.data.token = data.token;
-            
-            // ambil informasi saldo member
-            app.request.get('http://212.24.111.23/abc/member/saldo/'+data.mbrid, function (res) {
-                
-              var data = JSON.parse(res);
-          
-              if (data.status) {
-                $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
-                app.data.saldo = parseInt(data.saldo);
-              } else {
-                app.dialog.alert(data.message, 'Akun Saya');
-              }
-            });
+          this.request.post('http://212.24.111.23/abc/auth/login', formData, function (res) {
       
-          }
-        });
+            app.preloader.hide();
+            var data = JSON.parse(res);
+            console.log('data: ', data)
+        
+            if (data.status) {
+
+              // set data token
+              app.data.token = data.token;
+              
+              // ambil informasi saldo member
+              app.request.get('http://212.24.111.23/abc/member/saldo/'+data.mbrid, function (res) {
+                  
+                var data = JSON.parse(res);
+            
+                if (data.status) {
+                  $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
+                  app.data.saldo = parseInt(data.saldo);
+                } else {
+                  app.dialog.alert(data.message, 'Akun Saya');
+                }
+              });
+        
+            }
+          });
+        }
       }
     
       //*
