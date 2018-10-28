@@ -60,7 +60,7 @@ var app  = new Framework7({
 
     init: function () { // sama dengan onDeviceReady
 
-      //*
+      /*
       function copyDatabaseFile(dbName) {
 
         var sourceFileName = cordova.file.applicationDirectory + 'www/' + dbName;
@@ -89,7 +89,7 @@ var app  = new Framework7({
             });
           });
         });
-      }//*/
+      }
 
       copyDatabaseFile('data.db').then(function () {
         // success! :)
@@ -109,7 +109,7 @@ var app  = new Framework7({
       }).catch(function (err) {
         // error! :(
         console.log(err);
-      });
+      }); //*/
       
       if (hrs > 8) {
 
@@ -165,7 +165,7 @@ var app  = new Framework7({
         });
       }
     
-      //*
+      /*
       this.data.push = PushNotification.init({
         "android": {
             "senderID": "597497239727"
@@ -272,11 +272,11 @@ var swiper = app.swiper.create('.swiper-container', {
 swiper.autoplay.start();
 
 // cek selisih waktu, jika lebih tampilkan form login
-if (hrs > 8) {
+// if (hrs > 8s > 8) {
 
-  var ls = app.loginScreen.create({ el: '#my-login-screen' });
-  ls.open(false);
-}
+//   var ls = app.loginScreen.create({ el: '#my-login-screen' });
+//   ls.open(false);
+// }
 
 var ac_share = app.actions.create({
   buttons: [
@@ -499,14 +499,17 @@ $$('#my-reg-screen .register-button').on('click', function () {
   var regId = localStorage.getItem('RegId');
   var formData = app.form.convertToData('.register-form');
 
-  formData.mbrid = 1;
+  // formData.mbrid = 1; cause wrong result
   formData.gcmid = regId;
+
+  // console.log(formData)
   
   app.request.post('http://212.24.111.23/abc/member', formData, function (res) {
     
     app.preloader.hide();
     
     var data = JSON.parse(res);
+    // console.log(data)
 
     if (data.status) {
       
@@ -525,9 +528,9 @@ $$('#my-reg-screen .register-button').on('click', function () {
       app.loginScreen.close('#my-reg-screen');
       app.loginScreen.open('#my-login-screen');
     
-      setTimeout(function () {
+      // setTimeout(function () {
         app.dialog.alert(data.message, 'Registrasi Member');
-      }, 2000);
+      // }, 2000);
 
     } else {
       app.dialog.alert(data.message, 'Registrasi Member');
