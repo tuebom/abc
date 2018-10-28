@@ -165,7 +165,7 @@ var app  = new Framework7({
         });
       }
     
-      /*
+      //*
       this.data.push = PushNotification.init({
         "android": {
             "senderID": "597497239727"
@@ -272,7 +272,7 @@ var swiper = app.swiper.create('.swiper-container', {
 swiper.autoplay.start();
 
 // cek selisih waktu, jika lebih tampilkan form login
-if (hrs > 8s > 8) {
+if (hrs > 8) {
 
   var ls = app.loginScreen.create({ el: '#my-login-screen' });
   ls.open(false);
