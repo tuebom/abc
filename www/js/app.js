@@ -42,8 +42,8 @@ var app  = new Framework7({
       nohp: '',
       pin: '',
       saldo: 0,
-      // poin: 0,
       bonus: 0,
+      bLogedIn: false,
       currentDate: null,
       token: null,
       push: null,
@@ -121,56 +121,48 @@ var app  = new Framework7({
 
         // var mbrid = localStorage.getItem('mbrid');
         var nohp  = localStorage.getItem('nohp');
+        var pin   = localStorage.getItem('pin');
+        var gcmid = localStorage.getItem('RegId');
+        // console.log('mbrid ', mbrid)
 
-        if (nohp === "") {
+        // this.data.mbrid = mbrid;
+        this.data.nohp = nohp;
+        this.data.pin = pin;
 
-          var ls = app.loginScreen.create({ el: '#my-login-screen' });
-          ls.open(false);
-        } else {
+        var formData = {};
+        // formData.mbrid = mbrid;
+        formData.nohp  = nohp;
+        formData.pin   = pin;
+        formData.gcmid = gcmid;
+  
+        this.preloader.show();
 
-          var pin   = localStorage.getItem('pin');
-          var gcmid = localStorage.getItem('RegId');
-          // console.log('mbrid ', mbrid)
-
-          // this.data.mbrid = mbrid;
-          this.data.nohp = nohp;
-          this.data.pin = pin;
-
-          var formData = {};
-          // formData.mbrid = mbrid;
-          formData.nohp  = nohp;
-          formData.pin   = pin;
-          formData.gcmid = gcmid;
+        this.request.post('http://212.24.111.23/abc/auth/login', formData, function (res) {
     
-          this.preloader.show();
-
-          this.request.post('http://212.24.111.23/abc/auth/login', formData, function (res) {
+          app.preloader.hide();
+          var data = JSON.parse(res);
+          console.log('data: ', data)
       
-            app.preloader.hide();
-            var data = JSON.parse(res);
-            console.log('data: ', data)
-        
-            if (data.status) {
+          if (data.status) {
 
-              // set data token
-              app.data.token = data.token;
-              
-              // ambil informasi saldo member
-              app.request.get('http://212.24.111.23/abc/member/saldo/'+data.mbrid, function (res) {
-                  
-                var data = JSON.parse(res);
+            // set data token
+            app.data.token = data.token;
             
-                if (data.status) {
-                  $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
-                  app.data.saldo = parseInt(data.saldo);
-                } else {
-                  app.dialog.alert(data.message, 'Akun Saya');
-                }
-              });
-        
-            }
-          });
-        }
+            // ambil informasi saldo member
+            app.request.get('http://212.24.111.23/abc/member/saldo/'+data.mbrid, function (res) {
+                
+              var data = JSON.parse(res);
+          
+              if (data.status) {
+                $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
+                app.data.saldo = parseInt(data.saldo);
+              } else {
+                app.dialog.alert(data.message, 'Akun Saya');
+              }
+            });
+      
+          }
+        });
       }
     
       //*
@@ -431,6 +423,7 @@ $$('#my-login-screen .login-button').on('click', function () {
 
       app.loginScreen.close('#my-login-screen');
       
+      app.data.bLogedIn = true;
       app.data.mbrid = data.mbrid;
       app.data.nohp = nohp;
       app.data.pin = pin;
@@ -841,9 +834,11 @@ $$(document).on('backbutton', function (e) {
   // for example, based on what and where view you have
   if (app.views.main.router.url === '/') {
     
-    // catat waktu terakhir pemakaian
-    var dateEnd = new Date().getTime();
-    localStorage.setItem('lastOpened', dateEnd);
+    if (app.data.bLogedIn) {
+      // catat waktu terakhir pemakaian
+      var dateEnd = new Date().getTime();
+      localStorage.setItem('lastOpened', dateEnd);
+    }
 
     navigator.app.exitApp();
   } else {
