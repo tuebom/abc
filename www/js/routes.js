@@ -821,7 +821,7 @@ routes = [
 
         resolve(
           { componentUrl: './pages/inbox.html' },
-          { context: { data: data } }
+          // { context: { data: data } }
         );
         app.preloader.hide();
       // });
@@ -898,7 +898,6 @@ routes = [
             app.dialog.alert('select error: ' + error.message);
           });
         }
-  
       },
       pageAfterOut: function (event, page) {
       
