@@ -38,20 +38,14 @@
           <thead>
             <tr>
               <th class="label-cell">Waktu</th>
-              <th class="label-cell">Kode</th>
-              <th class="label-cell">Tujuan</th>
-              <th class="label-cell">SN</th>
-              <th class="numeric-cell">Harga</th>
+              <th class="numeric-cell">Bonus</th>
             </tr>
           </thead>
           <tbody>
             {{#each data}}
             <tr>
               <td class="label-cell">{{this.jam}}</td>
-              <td class="label-cell">{{this.kode}}</td>
-              <td class="label-cell">{{this.tujuan}}</td>
-              <td class="label-cell">{{this.sn}}</td>
-              <td class="numeric-cell">{{this.harga}}</td>
+              <td class="numeric-cell">{{this.bonus}}</td>
             </tr>
             {{/each}}
           </tbody>

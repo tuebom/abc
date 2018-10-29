@@ -123,7 +123,6 @@ var app  = new Framework7({
         var nohp  = localStorage.getItem('nohp');
         var pin   = localStorage.getItem('pin');
         var gcmid = localStorage.getItem('RegId');
-        // console.log('mbrid ', mbrid)
 
         // this.data.mbrid = mbrid;
         this.data.nohp = nohp;
@@ -141,11 +140,13 @@ var app  = new Framework7({
     
           app.preloader.hide();
           var data = JSON.parse(res);
-          console.log('data: ', data)
+          // console.log('data: ', data)
       
           if (data.status) {
 
             // set data token
+            app.data.bLogedIn = true;
+            app.data.mbrid = data.mbrid;
             app.data.token = data.token;
             
             // ambil informasi saldo member
@@ -156,6 +157,8 @@ var app  = new Framework7({
               if (data.status) {
                 $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
                 app.data.saldo = parseInt(data.saldo);
+                $$('.bonus').text(parseInt(data.bonus).toLocaleString('ID'));
+                app.data.bonus = parseInt(data.bonus);
               } else {
                 app.dialog.alert(data.message, 'Akun Saya');
               }
@@ -230,6 +233,7 @@ var app  = new Framework7({
             if (data.status) {
               $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
               app.data.saldo = parseInt(data.saldo);
+              $$('.bonus').text(parseInt(data.bonus).toLocaleString('ID'));
               app.data.bonus = parseInt(data.bonus);
             } else {
               app.dialog.alert(data.message, 'ABC');
@@ -550,58 +554,6 @@ $$('#my-login-screen').on('loginscreen:opened', function (e, loginScreen) {
   $$('#my-login-screen [name="nohp"]').val(localStorage.getItem('nohp'));
 });
 
-// $$('#tukar-poin .btnTukar').on('click', function(e){
-
-  // var poin = $$('#tukar-poin [name="poin"]').val();
-
-  // if (poin === '' || poin === '0') {
-    // app.dialog.alert('Masukkan jumlah poin yang akan ditukar.', 'Tukar Poin');
-    // return;
-  // } else
-  // if (app.data.poin === 0) {
-    // app.dialog.alert('Jumlah poin anda masih kosong.', 'Tukar Poin');
-    // return;
-  // } else
-  // if (poin > app.data.poin) {
-    // app.dialog.alert('Jumlah maksimal poin yang bisa ditukar adalah ' + app.data.poin +'.', 'Tukar Poin');
-    // $$('#tukar-poin [name="poin"]').val(app.data.poin);
-    // return;
-  // }
-
-  // var formData = app.form.convertToData('.tkrpoin');
-  // formData.Authorization = app.data.token;
-  
-  // app.request.post('http://212.24.111.23/abc/member/tukarpoin', formData, function (res) {
-    
-    // app.preloader.hide();
-    
-    // var data = JSON.parse(res);
-
-    // if (data.status) {
-      // $$('#tukar-poin [name="poin"]').val('');
-      // app.popup.close($$('.page[data-name="tukar-poin"]').parents(".popup"));
-
-      // app.request.get('http://212.24.111.23/abc/member/saldo/' + app.data.mbrid, function (res) {
-          
-        // var data = JSON.parse(res);
-    
-        // if (data.status) {
-          // $$('#saldo').text(parseInt(data.saldo).toLocaleString('ID'));
-          // app.data.saldo = parseInt(data.saldo);
-
-          // $$('#poin').text(parseInt(data.poin).toLocaleString('ID'));
-          // app.data.poin = parseInt(data.poin);
-        // } else {
-          // app.dialog.alert(data.message, 'Akun Saya');
-        // }
-      // });
-      
-    // } else {
-      // app.dialog.alert(data.message, 'Tukar Poin');
-    // }
-  // });
-// });  
-
 // transfer bonus
 $$('#transfer-bonus .btnTransfer').on('click', function(e){
   //e.preventDefault();
@@ -616,12 +568,12 @@ $$('#transfer-bonus .btnTransfer').on('click', function(e){
     app.dialog.alert('Jumlah bonus anda masih kosong.', 'Transfer Bonus');
     return;
   } else
-  if (bonus < 1000) {
-    app.dialog.alert('Jumlah minimal transfer bonus sebesar 1000.', 'Transfer Bonus');
-    $$('#nominal').val(1000);
+  if (bonus < 500) {
+    app.dialog.alert('Jumlah minimal transfer bonus sebesar 500.', 'Transfer Bonus');
+    $$('#nominal').val(500);
     return;
   } else
-  if (app.data.bonus < 1000) {
+  if (app.data.bonus < 500) {
     app.dialog.alert('Jumlah bonus anda belum mencukupi minimal transfer.', 'Transfer Bonus');
     $$('#nominal').val('');
     return;
@@ -669,61 +621,47 @@ $$('#transfer-bonus .btnTransfer').on('click', function(e){
 $$('#bank-trf .btnBankTrf').on('click', function(e){
   //e.preventDefault();
   
-  var bonus = parseInt($$('#withdrawal [name="nominal"]').val());
+  var bank = $$('#bank-trf [name="bank"]').val();
 
-  if (bonus === '' || bonus === '0') {
-    app.dialog.alert('Masukkan jumlah bonus yang akan diwithdraw.', 'Withdrawal');
+  if (bank === '') {
+    app.dialog.alert('Pilih data nama bank transfer withdrawal anda.', 'Bank Transfer Withdrawal');
     return;
-  } else
-  if (app.data.bonus === 0) {
-    app.dialog.alert('Jumlah bonus anda masih kosong.', 'Withdrawal');
+  }
+  
+  var norek = $$('#bank-trf [name="norek"]').val();
+
+  if (norek === '') {
+    app.dialog.alert('Masukkan data nama nomor rekening bank anda.', 'Bank Transfer Withdrawal');
     return;
-  } else
-  if (bonus < 100000) {
-    app.dialog.alert('Jumlah minimal withdrawal sebesar 100.000.', 'Withdrawal');
-    $$('#nominal').val(100000);
-    return;
-  } else
-  if (app.data.bonus < 100000) {
-    app.dialog.alert('Jumlah bonus anda belum mencukupi minimal withdrawal.', 'Withdrawal');
-    $$('#nominal').val('0');
-    return;
-  } else
-  if (bonus > app.data.bonus) {
-    app.dialog.alert('Jumlah maksimal bonus yang bisa diwithdraw adalah ' + app.data.bonus +'.', 'Withdrawal');
-    $$('#nominal').val(app.data.bonus);
+  }
+  
+  var atn = $$('#bank-trf [name="atn"]').val();
+
+  if (bank === '') {
+    app.dialog.alert('Masukkan data nama pemilik rekening.', 'Bank Transfer Withdrawal');
     return;
   }
 
-  var formData = app.form.convertToData('.withdrawal');
+  var formData = app.form.convertToData('.bank-trf');
   formData.Authorization = app.data.token;
   
-  app.request.post('http://212.24.111.23/abc/member/withdraw', formData, function (res) {
+  app.request.post('http://212.24.111.23/abc/member/setbank', formData, function (res) {
     
     app.preloader.hide();
 
     var data = JSON.parse(res);
 
     if (data.status) {
-      $$('#withdrawal [name="nominal"]').val('');
-      app.popup.close($$('.page[data-name="withdrawal"]').parents(".popup"));
+      
+      $$('#bank-trf [name="bank"]').val('');
+      $$('#bank-trf [name="norek"]').val('');
+      $$('#bank-trf [name="atn"]').val('');
+      
+      app.popup.close($$('.page[data-name="bank-trf"]').parents(".popup"));
+      app.dialog.alert(data.message, 'Bank Transfer Withdrawal');
 
-      app.request.get('http://212.24.111.23/abc/member/saldo/' + app.data.mbrid, function (res) {
-          
-        var data = JSON.parse(res);
-    
-        if (data.status) {
-          $$('#saldo').text(parseInt(data.saldo).toLocaleString('ID'));
-          app.data.saldo = parseInt(data.saldo);
-          
-          $$('#bonus').text(parseInt(data.bonus).toLocaleString('ID'));
-          app.data.bonus = parseInt(data.bonus);
-        } else {
-          app.dialog.alert(data.message, 'Akun Saya');
-        }
-      });
     } else {
-      app.dialog.alert(data.message, 'Withdrawal');
+      app.dialog.alert(data.message, 'Bank Transfer Withdrawal');
     }
   });
 });  
@@ -735,26 +673,26 @@ $$('#withdrawal .btnWithdraw').on('click', function(e){
   var bonus = parseInt($$('#withdrawal [name="nominal"]').val());
 
   if (bonus === '' || bonus === '0') {
-    app.dialog.alert('Masukkan jumlah bonus yang akan diwithdraw.', 'Withdrawal');
+    app.dialog.alert('Masukkan jumlah bonus yang akan ditarik.', 'Withdrawal');
     return;
   } else
   if (app.data.bonus === 0) {
     app.dialog.alert('Jumlah bonus anda masih kosong.', 'Withdrawal');
     return;
   } else
-  if (bonus < 100000) {
-    app.dialog.alert('Jumlah minimal withdrawal sebesar 100.000.', 'Withdrawal');
-    $$('#nominal').val(100000);
+  if (app.data.bonus < 100000) {
+    app.dialog.alert('Jumlah bonus anda belum mencukupi minimal penarikan.', 'Withdrawal');
+    $$('#withdrawal [name="nominal"]').val('0');
     return;
   } else
-  if (app.data.bonus < 100000) {
-    app.dialog.alert('Jumlah bonus anda belum mencukupi minimal withdrawal.', 'Withdrawal');
-    $$('#nominal').val('0');
+  if (bonus < 100000) {
+    app.dialog.alert('Jumlah minimal withdrawal sebesar 100.000.', 'Withdrawal');
+    $$('#withdrawal [name="nominal"]').val(100000);
     return;
   } else
   if (bonus > app.data.bonus) {
     app.dialog.alert('Jumlah maksimal bonus yang bisa diwithdraw adalah ' + app.data.bonus +'.', 'Withdrawal');
-    $$('#nominal').val(app.data.bonus);
+    $$('#withdrawal [name="nominal"]').val(app.data.bonus);
     return;
   }
 
@@ -818,6 +756,7 @@ $$('#ganti-pin .btnGanti').on('click', function () {
   app.request.post('http://212.24.111.23/abc/member/gantipin', formData, function (res) {
     
     app.preloader.hide();
+    
     var data = JSON.parse(res);
 
     if (data.status) {

@@ -148,21 +148,6 @@ routes = [
     on: {
       pageInit: function (event, page) {
         
-        /*var numpad = app.keypad.create({
-          inputEl: '#tujuan',
-          dotButton: false,
-          valueMaxLength: 13,
-          on: {
-            change(keypad, value) {
-              // console.log(keypad, value);
-              value = value.toString();
-              if (value.length === 4) {
-                updateList(value);
-              }
-            }
-          }
-        });*/
-        
         function updateList(hlr) {
           app.request.json('http://212.24.111.23/abc/data/'+hlr, function (json) {
 
@@ -806,40 +791,40 @@ routes = [
     path: '/inbox/',
     async: function (routeTo, routeFrom, resolve, reject) {
       // Router instance
-      var router = this;
+      // var router = this;
 
       // App instance
-      var app = router.app;
+      // var app = router.app;
 
       // Show Preloader
       app.preloader.show();
         
-      if (!app.data.currentDate) {
+      // if (!app.data.currentDate) {
       
-        var now = new Date();
+      //   var now = new Date();
         
-        var day = ("0" + now.getDate()).slice(-2);
-        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+      //   var day = ("0" + now.getDate()).slice(-2);
+      //   var month = ("0" + (now.getMonth() + 1)).slice(-2);
         
-        var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
-        app.data.currentDate = today;
-      }
+      //   var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+      //   app.data.currentDate = today;
+      // }
       
-      var formData = [];
+      // var formData = [];
 
-      formData.tgltrx = app.data.currentDate;
-      formData.Authorization = app.data.token;
+      // formData.tgltrx = app.data.currentDate;
+      // formData.Authorization = app.data.token;
       
-      app.request.post("http://212.24.111.23/abc/member/histori", formData, function(res) {
+      // app.request.post("http://212.24.111.23/abc/member/histori", formData, function(res) {
           
-        var data = JSON.parse(res);
+      //   var data = JSON.parse(res);
 
         resolve(
-          { componentUrl: './pages/histori-trx.html' },
+          { componentUrl: './pages/inbox.html' },
           { context: { data: data } }
         );
         app.preloader.hide();
-      });
+      // });
     },
     
     on: {
@@ -917,7 +902,7 @@ routes = [
       },
       pageAfterOut: function (event, page) {
       
-        app.data.currentDate = null;
+        // app.data.currentDate = null;
       }
     },
   },
@@ -1118,26 +1103,35 @@ routes = [
     on: {
       pageInit: function (event, page) {
         
+        $$('.contact').on('click', function(e){
+     
+          navigator.contacts.pickContact(function(contact){
+              //console.log('The following contact has been selected:' + JSON.stringify(contact));
+              var nomor = contact.phoneNumbers[0].value;
+              $$('#nohp').val(nomor.replace('+62','0').replace(/-/g,'').replace(/ /g,''));
+              $$('#nama').val(contact.name.givenName);
+          },function(err){
+              //console.log('Error: ' + err);
+              // alert('Error: ' + err);
+          });
+        });
+        
         $$('.btnKirim').on('click', function(e){
           //e.preventDefault();
-          
-          var nama = $$('#nama').val();
-          if (nama == '') {
-              app.dialog.alert('Masukkan nama member.', 'Pendaftaran Member');
-              return;
-          }
 
-          var rgx_nama = /^[a-zA-Z]'?([a-zA-Z]|\,|\.| |-)+$/;
-          var namax = nama.trim().match(rgx_nama);
-          if (!namax) {
-            app.dialog.alert('Input data nama belum benar.', 'Pendaftaran Member');
+          if (app.data.saldo == 0) {
+            app.dialog.alert('Saldo anda kosong. Silahkan topup saldo anda terlebih dahulu.', 'Pendaftaran Member');
+            return;
+          } else
+          if (app.data.saldo < 100000) {
+            app.dialog.alert('Jumlah minimum saldo agar anda bisa mendaftarkan anggota adalah 100.000', 'Pendaftaran Member');
             return;
           }
 
           var nohp = $$('#nohp').val();
-          if (nohp == '') {
-              app.dialog.alert('Masukkan nomor handphone.', 'Pendaftaran Member');
-              return;
+          if (nohp === '') {
+            app.dialog.alert('Masukkan data nomor handphone.', 'Pendaftaran Member');
+            return;
           }
 
           var rgx_nohp = /[08][0-9]{9,}/;
@@ -1146,12 +1140,25 @@ routes = [
             app.dialog.alert('Input data nomor handphone belum benar.', 'Pendaftaran Member');
             return;
           }
+          
+          var nama = $$('#nama').val();
+          if (nama == '') {
+            app.dialog.alert('Masukkan nama member.', 'Pendaftaran Member');
+            return;
+          }
+
+          var rgx_nama = /^[a-zA-Z]'?([a-zA-Z]|\,|\.| |-)+$/;
+          var namax = nama.trim().match(rgx_nama);
+          if (!namax) {
+            app.dialog.alert('Input data nama belum benar.', 'Pendaftaran Member');
+            return;
+          }
         
           app.preloader.show();
 
           var formData = app.form.convertToData('.pendaftaran');
           formData.mbrid = app.data.mbrid;
-          console.log(formData)
+          // console.log(formData)
           
           app.request.post('http://212.24.111.23/abc/member', formData, function (res) { //212.24.111.23
             
@@ -1160,10 +1167,11 @@ routes = [
             var data = JSON.parse(res);
         
             if (data.status) {
+              
               app.dialog.alert(data.message, 'Registrasi Member');
-              setTimeout(function () {
+              // setTimeout(function () {
                 app.router.back();
-              }, 2000);
+              // }, 2000);
             } else {
               app.dialog.alert(data.message, 'Pendaftaran Member');
             }
@@ -1205,7 +1213,7 @@ routes = [
           var rgx_nohp = /[08][0-9]{9,}/;
           var nohp = tujuan.trim().match(rgx_nohp);
           if (!nohp) {
-              app.dialog.alert('Input data nomor hp tujuan belum benar.', 'Transfer Saldo');
+              app.dialog.alert('Input data nomor handphone tujuan belum benar.', 'Transfer Saldo');
               return;
           }
           
@@ -1220,13 +1228,18 @@ routes = [
               app.dialog.alert('Masukkan nominal transfer saldo.', 'Transfer Saldo');
               return;
           } else
-          if (nominal < 500) {
-            app.dialog.alert('Jumlah minimal transfer saldo sebesar 500.', 'Transfer Saldo');
-            $$('#nominal').val(500);
-            return;
-          } else
           if (app.data.saldo == 0) {
             app.dialog.alert('Saldo anda kosong. Silahkan topup saldo anda terlebih dahulu.', 'Transfer Saldo');
+            return;
+          } else
+          if (app.data.saldo < 1000) {
+            app.dialog.alert('Jumlah saldo anda belum mencukupi minimal transfer.', 'Transfer Saldo');
+            $$('#withdrawal [name="nominal"]').val('0');
+            return;
+          } else
+          if (nominal < 1000) {
+            app.dialog.alert('Jumlah minimal transfer saldo sebesar 1000.', 'Transfer Saldo');
+            $$('#nominal').val(1000);
             return;
           } else
           if (nominal > app.data.saldo) {
@@ -1289,7 +1302,7 @@ routes = [
       formData.tgltrx = app.data.currentDate;
       formData.Authorization = app.data.token;
       
-      app.request.post("http://212.24.111.23/abc/member/histori-bonus", formData, function(res) {
+      app.request.post("http://212.24.111.23/abc/member/historibns", formData, function(res) {
           
         var data = JSON.parse(res);
 
@@ -1309,7 +1322,7 @@ routes = [
         $$('#tgltrx').on('change', function(e){
 
           app.data.currentDate = $$('#tgltrx').val();
-          app.router.navigate('/histori-bonus/', {
+          app.router.navigate('/histori-bns/', {
             reloadCurrent: true,
             ignoreCache: true,
           });
@@ -1350,7 +1363,7 @@ routes = [
       formData.tgltrx = app.data.currentDate;
       formData.Authorization = app.data.token;
       
-      app.request.post("http://212.24.111.23/abc/member/histori", formData, function(res) {
+      app.request.post("http://212.24.111.23/abc/member/historitrx", formData, function(res) {
           
         var data = JSON.parse(res);
 
