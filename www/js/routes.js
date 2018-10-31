@@ -16,12 +16,13 @@ routes = [
             if (data.status) {
               $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
               app.data.saldo = parseInt(data.saldo);
+              $$('.bonus').text(parseInt(data.bonus).toLocaleString('ID'));
               app.data.bonus = parseInt(data.bonus);
             } else {
               app.dialog.alert(data.message, 'ABC');
             }
           });
-        }, 11000);
+        }, 1000);
       }
     }
         
@@ -789,122 +790,116 @@ routes = [
   },
   {
     path: '/inbox/',
-    async: function (routeTo, routeFrom, resolve, reject) {
-      // Router instance
-      // var router = this;
-
-      // App instance
-      // var app = router.app;
-
-      // Show Preloader
-      app.preloader.show();
-        
-      // if (!app.data.currentDate) {
-      
-      //   var now = new Date();
-        
-      //   var day = ("0" + now.getDate()).slice(-2);
-      //   var month = ("0" + (now.getMonth() + 1)).slice(-2);
-        
-      //   var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
-      //   app.data.currentDate = today;
-      // }
-      
-      // var formData = [];
-
-      // formData.tgltrx = app.data.currentDate;
-      // formData.Authorization = app.data.token;
-      
-      // app.request.post("http://212.24.111.23/abc/member/histori", formData, function(res) {
-          
-      //   var data = JSON.parse(res);
-
-        resolve(
-          { componentUrl: './pages/inbox.html' },
-          // { context: { data: data } }
-        );
-        app.preloader.hide();
-      // });
-    },
-    
-    on: {
-      pageInit: function (event, page) {
-        
-        // $$('#tgltrx').val(app.data.currentDate);
-      
-        // Init Messages
-        var messages = app.messages.create({
-          el: '.messages',
-
-          // First message rule
-          firstMessageRule: function (message, previousMessage, nextMessage) {
-            // Skip if title
-            if (message.isTitle) return false;
-            /* if:
-              - there is no previous message
-              - or previous message type (send/received) is different
-              - or previous message sender name is different
-            */
-            if (!previousMessage || previousMessage.type !== message.type || previousMessage.name !== message.name) return true;
-            return false;
-          },
-          // Last message rule
-          lastMessageRule: function (message, previousMessage, nextMessage) {
-            // Skip if title
-            if (message.isTitle) return false;
-            /* if:
-              - there is no next message
-              - or next message type (send/received) is different
-              - or next message sender name is different
-            */
-            if (!nextMessage || nextMessage.type !== message.type || nextMessage.name !== message.name) return true;
-            return false;
-          },
-          // Last message rule
-          tailMessageRule: function (message, previousMessage, nextMessage) {
-            // Skip if title
-            if (message.isTitle) return false;
-              /* if (bascially same as lastMessageRule):
-              - there is no next message
-              - or next message type (send/received) is different
-              - or next message sender name is different
-            */
-            if (!nextMessage || nextMessage.type !== message.type || nextMessage.name !== message.name) return true;
-            return false;
-          }
-        });
-        
-        var db = app.data.db;
-      
-        if (db) {
-          
-          db.transaction(function(tx) {
-
-            tx.executeSql('select jam, info from notifikasi order by jam;', [], function(ignored, res) {
-
-              for (var i = 0; i < res.rows.length; i++) {
-
-                messages.addMessage({
-                  text: res.rows.item(i).info,
-                  textHeader: res.rows.item(i).jam,
-                  type: 'received'
-                  // name: person.name,
-                  // avatar: person.avatar
-                });
-              }
-              
-            });
-          }, function(error) {
-            app.dialog.alert('select error: ' + error.message);
-          });
-        }
-      },
-      pageAfterOut: function (event, page) {
-      
-        // app.data.currentDate = null;
-      }
-    },
+    componentUrl: './pages/inbox.html',
   },
+  // {
+  //   path: '/inbox/',
+  //   async: function (routeTo, routeFrom, resolve, reject) {
+  //     // Router instance
+  //     // var router = this;
+
+  //     // App instance
+  //     var app = router.app;
+
+  //     // Show Preloader
+  //     app.preloader.show();
+        
+  //     var db = app.data.db;
+  //     var data = [];
+      
+  //     if (db) {
+        
+  //       db.transaction(function(tx) {
+
+  //         tx.executeSql('select jam, info from notifikasi order by jam;', [], function(ignored, res) {
+  //           data = JSON.parse(res.rows);
+  //         });
+  //       }, function(error) {
+  //         app.dialog.alert('select error: ' + error.message);
+  //       });
+  //     }
+
+  //     resolve(
+  //       { componentUrl: './pages/favorite.html' },
+  //       { context: { data: data } }
+  //     );
+  //     app.preloader.hide();
+  //   },
+    
+  //   on: {
+  //     pageInit: function (event, page) {
+        
+  //       // $$('#tgltrx').val(app.data.currentDate);
+      
+  //       // Init Messages
+  //       var messages = app.messages.create({
+  //         el: '.messages',
+
+  //         // First message rule
+  //         firstMessageRule: function (message, previousMessage, nextMessage) {
+  //           // Skip if title
+  //           if (message.isTitle) return false;
+  //           /* if:
+  //             - there is no previous message
+  //             - or previous message type (send/received) is different
+  //             - or previous message sender name is different
+  //           */
+  //           if (!previousMessage || previousMessage.type !== message.type || previousMessage.name !== message.name) return true;
+  //           return false;
+  //         },
+  //         // Last message rule
+  //         lastMessageRule: function (message, previousMessage, nextMessage) {
+  //           // Skip if title
+  //           if (message.isTitle) return false;
+  //           /* if:
+  //             - there is no next message
+  //             - or next message type (send/received) is different
+  //             - or next message sender name is different
+  //           */
+  //           if (!nextMessage || nextMessage.type !== message.type || nextMessage.name !== message.name) return true;
+  //           return false;
+  //         },
+  //         // Last message rule
+  //         tailMessageRule: function (message, previousMessage, nextMessage) {
+  //           // Skip if title
+  //           if (message.isTitle) return false;
+  //             /* if (bascially same as lastMessageRule):
+  //             - there is no next message
+  //             - or next message type (send/received) is different
+  //             - or next message sender name is different
+  //           */
+  //           if (!nextMessage || nextMessage.type !== message.type || nextMessage.name !== message.name) return true;
+  //           return false;
+  //         }
+  //       });
+        
+    //     var db = app.data.db;
+      
+    //     if (db) {
+          
+    //       db.transaction(function(tx) {
+
+    //         tx.executeSql('select jam, info from notifikasi order by jam;', [], function(ignored, res) {
+
+    //           for (var i = 0; i < res.rows.length; i++) {
+
+    //             messages.addMessage({
+    //               text: res.rows.item(i).info,
+    //               textHeader: res.rows.item(i).jam,
+    //               type: 'received'
+    //               // name: person.name,
+    //               // avatar: person.avatar
+    //             });
+    //           }
+              
+    //         });
+    //       }, function(error) {
+    //         app.dialog.alert('select error: ' + error.message);
+    //       });
+    //     }
+    //   }
+    // },
+  // },
   {
     path: '/cek-harga/',
     url: './pages/cek-harga.html',

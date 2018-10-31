@@ -95,22 +95,25 @@ var app  = new Framework7({
         // success! :)
         app.data.db = window.sqlitePlugin.openDatabase({name: 'data.db'});
 
-        var db = app.data.db;
+      }).catch(function (err) {
+        // error! :(
+        console.log(err);
+      }); //*/
+
+      var db = this.data.db;
             
-      //   var now = new Date();
-      //   var date = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
-  
+      if (db) {
+
+        var now = new Date();
+        var date = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
+
         db.transaction(function(tx) {
           tx.executeSql('delete from notifikasi where tgl < ?;', [date]);
         }, function(error) {
           app.dialog.alert('delete error: ' + error.message);
         });
-
-      }).catch(function (err) {
-        // error! :(
-        console.log(err);
-      }); //*/
-      
+      }
+    
       if (hrs > 8) {
 
         // jika lebih 8 jam, setup info login terakhir kali
@@ -197,30 +200,26 @@ var app  = new Framework7({
 
       push.on('notification', function(data) {
         
-        if (data.message.substring(0, 6) === '[SAVE]') {
-
-          var db = app.data.db;
-      
-          if (db) {
-            
-            var now = new Date();
-            var date = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
-            var time = now.getHours() + ":" + now.getMinutes()
-            
-            db.transaction(function(tx) {
-                db.transaction(function(tx) {
-                  tx.executeSql('insert into notifikasi (tgl, jam, info) values (?, ?, ?);', [date, time, data.message.slice(7)]);
-                }, function(error) {
-                  app.dialog.alert('insert error: ' + error.message);
-                });
-            });
-          }
-          app.dialog.alert(data.message.slice(7), 'ABC');
-        
-        } else {
-          // show message
-          app.dialog.alert(data.message, 'ABC');
+        var db = app.data.db;
+    
+        if (db) {
+          
+          var now = new Date();
+          var date = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
+          var time = now.getHours() + ":" + now.getMinutes()
+          
+          db.transaction(function(tx) {
+              db.transaction(function(tx) {
+                tx.executeSql('insert into notifikasi (tgl, jam, info) values (?, ?, ?);', [date, time, data.message]);
+                app.dialog.alert('insert sukses!');
+              }, function(error) {
+                app.dialog.alert('insert error: ' + error.message);
+              });
+          });
         }
+      
+        // show message
+        app.dialog.alert(data.message, 'ABC');
         
         // update info saldo
         setTimeout(function () {
