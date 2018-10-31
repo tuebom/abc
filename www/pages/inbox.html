@@ -74,7 +74,7 @@
         
           db.transaction(function(tx) {
             
-            tx.executeSql('select jam, info from notifikasi order by jam;', [], function(ignored, res) {
+            tx.executeSql('select jam, info from notifikasi order by jam desc;', [], function(ignored, res) {
               
               for (var i = 0; i < res.rows.length; i++) {
 

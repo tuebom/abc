@@ -211,7 +211,6 @@ var app  = new Framework7({
           db.transaction(function(tx) {
               db.transaction(function(tx) {
                 tx.executeSql('insert into notifikasi (tgl, jam, info) values (?, ?, ?);', [date, time, data.message]);
-                app.dialog.alert('insert sukses!');
               }, function(error) {
                 app.dialog.alert('insert error: ' + error.message);
               });
