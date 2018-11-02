@@ -143,7 +143,6 @@ var app  = new Framework7({
     
           app.preloader.hide();
           var data = JSON.parse(res);
-          // console.log('data: ', data)
       
           if (data.status) {
 
@@ -416,7 +415,6 @@ $$('#my-login-screen .login-button').on('click', function () {
     
     app.preloader.hide();
     
-    // console.log(res)
     var data = JSON.parse(res);
 
     if (data.status) {
@@ -506,14 +504,11 @@ $$('#my-reg-screen .register-button').on('click', function () {
   // formData.mbrid = 1; cause wrong result
   formData.gcmid = regId;
 
-  // console.log(formData)
-  
   app.request.post('http://212.24.111.23/abc/member', formData, function (res) {
     
     app.preloader.hide();
     
     var data = JSON.parse(res);
-    // console.log(data)
 
     if (data.status) {
       
@@ -679,7 +674,6 @@ $$('#bank-trf .btnBankTrf').on('click', function(e){
       $$('#bank-trf [name="pin"]').val('');
       
       app.popup.close($$('.page[data-name="bank-trf"]').parents(".popup"));
-      app.dialog.alert(data.message, 'Bank Transfer Withdrawal');
 
     } else {
       app.dialog.alert(data.message, 'Bank Transfer Withdrawal');
@@ -698,29 +692,29 @@ $$('#bank-trf').on('popup:closed', function (e, popup) {
 $$('#withdrawal .btnWithdraw').on('click', function(e){
   //e.preventDefault();
   
-  var bonus = parseInt($$('#withdrawal [name="nominal"]').val());
+  var saldo = parseInt($$('#withdrawal [name="nominal"]').val());
 
-  if (bonus === '' || bonus === '0') {
-    app.dialog.alert('Masukkan jumlah bonus yang akan ditarik.', 'Withdrawal');
+  if (saldo === '' || saldo === '0') {
+    app.dialog.alert('Masukkan jumlah saldo yang akan ditarik.', 'Withdrawal');
     return;
   } else
-  if (app.data.bonus === 0) {
-    app.dialog.alert('Jumlah bonus anda masih kosong.', 'Withdrawal');
+  if (app.data.saldo === 0) {
+    app.dialog.alert('Jumlah saldo anda masih kosong.', 'Withdrawal');
     return;
   } else
-  if (app.data.bonus < 100000) {
-    app.dialog.alert('Jumlah bonus anda belum mencukupi minimal penarikan.', 'Withdrawal');
+  if (app.data.saldo < 100000) {
+    app.dialog.alert('Jumlah saldo anda belum mencukupi minimal penarikan.', 'Withdrawal');
     $$('#withdrawal [name="nominal"]').val('0');
     return;
   } else
-  if (bonus < 100000) {
+  if (saldo < 100000) {
     app.dialog.alert('Jumlah minimal withdrawal sebesar 100.000.', 'Withdrawal');
     $$('#withdrawal [name="nominal"]').val(100000);
     return;
   } else
-  if (bonus > app.data.bonus) {
-    app.dialog.alert('Jumlah maksimal bonus yang bisa diwithdraw adalah ' + app.data.bonus +'.', 'Withdrawal');
-    $$('#withdrawal [name="nominal"]').val(app.data.bonus);
+  if (saldo > app.data.saldo) {
+    app.dialog.alert('Jumlah maksimal saldo yang bisa diwithdraw adalah ' + app.data.saldo +'.', 'Withdrawal');
+    $$('#withdrawal [name="nominal"]').val(app.data.saldo);
     return;
   }
 
@@ -746,6 +740,7 @@ $$('#withdrawal .btnWithdraw').on('click', function(e){
       
       app.popup.close($$('.page[data-name="withdrawal"]').parents(".popup"));
     } else {
+      
       app.dialog.alert(data.message, 'Withdrawal');
     }
   });
@@ -789,6 +784,8 @@ $$('#ganti-pin .btnGanti').on('click', function () {
     if (data.status) {
 
       app.data.pin = pinbaru;
+      app.data.token = data.token;
+
       localStorage.setItem('pin', pinbaru);
 
       $$('#ganti-pin [name="pinlama"]').val('');

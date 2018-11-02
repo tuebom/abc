@@ -1095,12 +1095,12 @@ routes = [
           if (!nohp) {
               app.dialog.alert('Input data nomor handphone tujuan belum benar.', 'Transfer Saldo');
               return;
-          }
+          } else
           
           if (nohp == app.data.nohp) {
             app.dialog.alert('Nomor handphone tujuan tidak boleh sama dengan nomor handphone asal.', 'Transfer Saldo');
             return;
-          } else
+          }
 
           var nominal = $$('#nominal').val();
 
