@@ -586,8 +586,8 @@ $$('#transfer-bonus .btnTransfer').on('click', function(e){
 
   var pin = $$('#transfer-bonus [name="pin"]').val();
   if (pin === '') {
-      app.dialog.alert('Masukkan nomor PIN anda.', 'Transfer Bonus');
-      return;
+    app.dialog.alert('Masukkan nomor PIN anda.', 'Transfer Bonus');
+    return;
   }
 
   var formData = app.form.convertToData('.trfbonus');
@@ -656,10 +656,10 @@ $$('#bank-trf .btnBankTrf').on('click', function(e){
     return;
   }
 
-  var pin = $$('#transfer-bonus [name="pin"]').val();
+  var pin = $$('#bank-trf [name="pin"]').val();
   if (pin === '') {
-      app.dialog.alert('Masukkan nomor PIN anda.', 'Bank Transfer Withdrawal');
-      return;
+    app.dialog.alert('Masukkan nomor PIN anda.', 'Bank Transfer Withdrawal');
+    return;
   }
 
   var formData = app.form.convertToData('.bank-trf');
@@ -726,8 +726,8 @@ $$('#withdrawal .btnWithdraw').on('click', function(e){
 
   var pin = $$('#withdrawal [name="pin"]').val();
   if (pin === '') {
-      app.dialog.alert('Masukkan nomor PIN anda.', 'Withdrawal');
-      return;
+    app.dialog.alert('Masukkan nomor PIN anda.', 'Withdrawal');
+    return;
   }
 
   var formData = app.form.convertToData('.withdrawal');
@@ -822,11 +822,9 @@ $$(document).on('backbutton', function (e) {
   }
 });
 
-$$('#my-login-screen').on('loginscreen:open', function (e, loginScreen) {
+$$('#my-login-screen').on('loginscreen:close', function (e, loginScreen) {
 
-  // if ( AdMob ) {
-  //   AdMob.hideBanner();
-  // }
+  $$('#my-login-screen [name="pin"]').val('');
 });
 
 app.on('pageInit', function (page) {
