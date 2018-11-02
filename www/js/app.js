@@ -633,7 +633,7 @@ $$('#bank-trf .btnBankTrf').on('click', function(e){
   var bank = $$('#bank-trf [name="bank"]').val();
 
   if (bank === '') {
-    app.dialog.alert('Pilih data nama bank transfer withdrawal anda.', 'Bank Transfer Withdrawal');
+    app.dialog.alert('Pilih data nama bank transfer penarikan uang anda.', 'Bank Transfer Withdrawal');
     return;
   }
   
