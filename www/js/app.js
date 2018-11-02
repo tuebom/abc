@@ -166,7 +166,7 @@ var app  = new Framework7({
                 app.dialog.alert(data.message);
               }
             });
-            
+
           } else {
             navigator.app.exitApp();
           }
@@ -751,7 +751,7 @@ $$('#withdrawal .btnWithdraw').on('click', function(e){
   });
 });  
 
-$$('#bank-trf').on('popup:closed', function (e, popup) {
+$$('#withdrawal').on('popup:closed', function (e, popup) {
   $$('#withdrawal [name="nominal"]').val('');
   $$('#withdrawal [name="pin"]').val('');
 });
@@ -798,7 +798,7 @@ $$('#ganti-pin .btnGanti').on('click', function () {
   });
 });
 
-$$('#bank-trf').on('popup:closed', function (e, popup) {
+$$('#ganti-pin').on('popup:closed', function (e, popup) {
   $$('#ganti-pin [name="pinlama"]').val('');
   $$('#ganti-pin [name="pinbaru"]').val('');
 });
