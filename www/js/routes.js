@@ -780,126 +780,12 @@ routes = [
           // AdMob.hideBanner();
         // }
       },
-      // pageAfterOut: function (event, page) {
-      
-        // if ( AdMob ) {
-          // AdMob.showBanner(AdMob.AD_POSITION.BOTTOM_CENTER);
-        // }
-      // }
     }
   },
   {
     path: '/inbox/',
     componentUrl: './pages/inbox.html',
   },
-  // {
-  //   path: '/inbox/',
-  //   async: function (routeTo, routeFrom, resolve, reject) {
-  //     // Router instance
-  //     // var router = this;
-
-  //     // App instance
-  //     var app = router.app;
-
-  //     // Show Preloader
-  //     app.preloader.show();
-        
-  //     var db = app.data.db;
-  //     var data = [];
-      
-  //     if (db) {
-        
-  //       db.transaction(function(tx) {
-
-  //         tx.executeSql('select jam, info from notifikasi order by jam;', [], function(ignored, res) {
-  //           data = JSON.parse(res.rows);
-  //         });
-  //       }, function(error) {
-  //         app.dialog.alert('select error: ' + error.message);
-  //       });
-  //     }
-
-  //     resolve(
-  //       { componentUrl: './pages/favorite.html' },
-  //       { context: { data: data } }
-  //     );
-  //     app.preloader.hide();
-  //   },
-    
-  //   on: {
-  //     pageInit: function (event, page) {
-        
-  //       // $$('#tgltrx').val(app.data.currentDate);
-      
-  //       // Init Messages
-  //       var messages = app.messages.create({
-  //         el: '.messages',
-
-  //         // First message rule
-  //         firstMessageRule: function (message, previousMessage, nextMessage) {
-  //           // Skip if title
-  //           if (message.isTitle) return false;
-  //           /* if:
-  //             - there is no previous message
-  //             - or previous message type (send/received) is different
-  //             - or previous message sender name is different
-  //           */
-  //           if (!previousMessage || previousMessage.type !== message.type || previousMessage.name !== message.name) return true;
-  //           return false;
-  //         },
-  //         // Last message rule
-  //         lastMessageRule: function (message, previousMessage, nextMessage) {
-  //           // Skip if title
-  //           if (message.isTitle) return false;
-  //           /* if:
-  //             - there is no next message
-  //             - or next message type (send/received) is different
-  //             - or next message sender name is different
-  //           */
-  //           if (!nextMessage || nextMessage.type !== message.type || nextMessage.name !== message.name) return true;
-  //           return false;
-  //         },
-  //         // Last message rule
-  //         tailMessageRule: function (message, previousMessage, nextMessage) {
-  //           // Skip if title
-  //           if (message.isTitle) return false;
-  //             /* if (bascially same as lastMessageRule):
-  //             - there is no next message
-  //             - or next message type (send/received) is different
-  //             - or next message sender name is different
-  //           */
-  //           if (!nextMessage || nextMessage.type !== message.type || nextMessage.name !== message.name) return true;
-  //           return false;
-  //         }
-  //       });
-        
-    //     var db = app.data.db;
-      
-    //     if (db) {
-          
-    //       db.transaction(function(tx) {
-
-    //         tx.executeSql('select jam, info from notifikasi order by jam;', [], function(ignored, res) {
-
-    //           for (var i = 0; i < res.rows.length; i++) {
-
-    //             messages.addMessage({
-    //               text: res.rows.item(i).info,
-    //               textHeader: res.rows.item(i).jam,
-    //               type: 'received'
-    //               // name: person.name,
-    //               // avatar: person.avatar
-    //             });
-    //           }
-              
-    //         });
-    //       }, function(error) {
-    //         app.dialog.alert('select error: ' + error.message);
-    //       });
-    //     }
-    //   }
-    // },
-  // },
   {
     path: '/cek-harga/',
     url: './pages/cek-harga.html',
@@ -1103,7 +989,7 @@ routes = [
               //console.log('The following contact has been selected:' + JSON.stringify(contact));
               var nomor = contact.phoneNumbers[0].value;
               $$('#nohp').val(nomor.replace('+62','0').replace(/-/g,'').replace(/ /g,''));
-              $$('#nama').val(contact.name.givenName);
+              // $$('#nama').val(contact.name.givenName);
           },function(err){
               //console.log('Error: ' + err);
               // alert('Error: ' + err);

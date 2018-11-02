@@ -95,24 +95,24 @@ var app  = new Framework7({
         // success! :)
         app.data.db = window.sqlitePlugin.openDatabase({name: 'data.db'});
 
+        var db = app.data.db;
+            
+        // if (db) {
+  
+          var now = new Date();
+          var date = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
+  
+          app.data.db.transaction(function(tx) {
+            tx.executeSql('delete from notifikasi where tgl < ?;', [date]);
+          }, function(error) {
+            app.dialog.alert('delete error: ' + error.message);
+          });
+        // }
+  
       }).catch(function (err) {
         // error! :(
         console.log(err);
       }); //*/
-
-      var db = this.data.db;
-            
-      if (db) {
-
-        var now = new Date();
-        var date = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
-
-        db.transaction(function(tx) {
-          tx.executeSql('delete from notifikasi where tgl < ?;', [date]);
-        }, function(error) {
-          app.dialog.alert('delete error: ' + error.message);
-        });
-      }
     
       if (hrs > 8) {
 
@@ -163,10 +163,12 @@ var app  = new Framework7({
                 $$('.bonus').text(parseInt(data.bonus).toLocaleString('ID'));
                 app.data.bonus = parseInt(data.bonus);
               } else {
-                app.dialog.alert(data.message, 'Akun Saya');
+                app.dialog.alert(data.message);
               }
             });
-      
+            
+          } else {
+            navigator.app.exitApp();
           }
         });
       }
@@ -582,6 +584,12 @@ $$('#transfer-bonus .btnTransfer').on('click', function(e){
     return;
   }
 
+  var pin = $$('#transfer-bonus [name="pin"]').val();
+  if (pin === '') {
+      app.dialog.alert('Masukkan nomor PIN anda.', 'Transfer Bonus');
+      return;
+  }
+
   var formData = app.form.convertToData('.trfbonus');
   formData.Authorization = app.data.token;
   
@@ -592,7 +600,10 @@ $$('#transfer-bonus .btnTransfer').on('click', function(e){
     var data = JSON.parse(res);
 
     if (data.status) {
+      
       $$('#transfer-bonus [name="nominal"]').val('');
+      $$('#transfer-bonus [name="pin"]').val('');
+      
       app.popup.close($$('.page[data-name="transfer-bonus"]').parents(".popup"));
 
       app.request.get('http://212.24.111.23/abc/member/saldo/' + app.data.mbrid, function (res) {
@@ -615,6 +626,11 @@ $$('#transfer-bonus .btnTransfer').on('click', function(e){
   });
 });  
 
+$$('#transfer-bonus').on('popup:closed', function (e, popup) {
+  $$('#transfer-bonus [name="nominal"]').val('');
+  $$('#transfer-bonus [name="pin"]').val('');
+});
+
 // setup bank transfer
 $$('#bank-trf .btnBankTrf').on('click', function(e){
   //e.preventDefault();
@@ -635,9 +651,15 @@ $$('#bank-trf .btnBankTrf').on('click', function(e){
   
   var atn = $$('#bank-trf [name="atn"]').val();
 
-  if (bank === '') {
+  if (atn === '') {
     app.dialog.alert('Masukkan data nama pemilik rekening.', 'Bank Transfer Withdrawal');
     return;
+  }
+
+  var pin = $$('#transfer-bonus [name="pin"]').val();
+  if (pin === '') {
+      app.dialog.alert('Masukkan nomor PIN anda.', 'Bank Transfer Withdrawal');
+      return;
   }
 
   var formData = app.form.convertToData('.bank-trf');
@@ -654,6 +676,7 @@ $$('#bank-trf .btnBankTrf').on('click', function(e){
       $$('#bank-trf [name="bank"]').val('');
       $$('#bank-trf [name="norek"]').val('');
       $$('#bank-trf [name="atn"]').val('');
+      $$('#bank-trf [name="pin"]').val('');
       
       app.popup.close($$('.page[data-name="bank-trf"]').parents(".popup"));
       app.dialog.alert(data.message, 'Bank Transfer Withdrawal');
@@ -663,6 +686,13 @@ $$('#bank-trf .btnBankTrf').on('click', function(e){
     }
   });
 });  
+
+$$('#bank-trf').on('popup:closed', function (e, popup) {
+  $$('#bank-trf [name="bank"]').val('');
+  $$('#bank-trf [name="norek"]').val('');
+  $$('#bank-trf [name="atn"]').val('');
+  $$('#bank-trf [name="pin"]').val('');
+});
 
 // withdrawal
 $$('#withdrawal .btnWithdraw').on('click', function(e){
@@ -694,6 +724,12 @@ $$('#withdrawal .btnWithdraw').on('click', function(e){
     return;
   }
 
+  var pin = $$('#withdrawal [name="pin"]').val();
+  if (pin === '') {
+      app.dialog.alert('Masukkan nomor PIN anda.', 'Withdrawal');
+      return;
+  }
+
   var formData = app.form.convertToData('.withdrawal');
   formData.Authorization = app.data.token;
   
@@ -704,28 +740,21 @@ $$('#withdrawal .btnWithdraw').on('click', function(e){
     var data = JSON.parse(res);
 
     if (data.status) {
+      
       $$('#withdrawal [name="nominal"]').val('');
+      $$('#withdrawal [name="pin"]').val('');
+      
       app.popup.close($$('.page[data-name="withdrawal"]').parents(".popup"));
-
-      app.request.get('http://212.24.111.23/abc/member/saldo/' + app.data.mbrid, function (res) {
-          
-        var data = JSON.parse(res);
-    
-        if (data.status) {
-          $$('#saldo').text(parseInt(data.saldo).toLocaleString('ID'));
-          app.data.saldo = parseInt(data.saldo);
-          
-          $$('#bonus').text(parseInt(data.bonus).toLocaleString('ID'));
-          app.data.bonus = parseInt(data.bonus);
-        } else {
-          app.dialog.alert(data.message, 'Akun Saya');
-        }
-      });
     } else {
       app.dialog.alert(data.message, 'Withdrawal');
     }
   });
 });  
+
+$$('#bank-trf').on('popup:closed', function (e, popup) {
+  $$('#withdrawal [name="nominal"]').val('');
+  $$('#withdrawal [name="pin"]').val('');
+});
 
 // ganti pin
 $$('#ganti-pin .btnGanti').on('click', function () {
@@ -758,13 +787,20 @@ $$('#ganti-pin .btnGanti').on('click', function () {
     var data = JSON.parse(res);
 
     if (data.status) {
+
       $$('#ganti-pin [name="pinlama"]').val('');
       $$('#ganti-pin [name="pinbaru"]').val('');
+      
       app.popup.close($$('.page[data-name="ganti-pin"]').parents(".popup"));
     } else {
       app.dialog.alert(data.message, 'Ganti PIN');
     }
   });
+});
+
+$$('#bank-trf').on('popup:closed', function (e, popup) {
+  $$('#ganti-pin [name="pinlama"]').val('');
+  $$('#ganti-pin [name="pinbaru"]').val('');
 });
 
 $$(document).on('backbutton', function (e) {
