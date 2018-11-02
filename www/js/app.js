@@ -788,6 +788,9 @@ $$('#ganti-pin .btnGanti').on('click', function () {
 
     if (data.status) {
 
+      app.data.pin = pinbaru;
+      localStorage.setItem('pin', pinbaru);
+
       $$('#ganti-pin [name="pinlama"]').val('');
       $$('#ganti-pin [name="pinbaru"]').val('');
       
