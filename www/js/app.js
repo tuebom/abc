@@ -167,6 +167,10 @@ var app  = new Framework7({
             });
 
           } else {
+            // delete histori
+            localStorage.removeItem('lastOpened');
+            localStorage.removeItem('nohp');
+            localStorage.removeItem('pin');
             navigator.app.exitApp();
           }
         });
@@ -600,7 +604,7 @@ $$('#transfer-bonus .btnTransfer').on('click', function(e){
       $$('#transfer-bonus [name="pin"]').val('');
       
       app.popup.close($$('.page[data-name="transfer-bonus"]').parents(".popup"));
-
+      
       app.request.get('http://212.24.111.23/abc/member/saldo/' + app.data.mbrid, function (res) {
           
         var data = JSON.parse(res);
@@ -616,6 +620,7 @@ $$('#transfer-bonus .btnTransfer').on('click', function(e){
         }
       });
     } else {
+      $$('#transfer-bonus [name="pin"]').val('');
       app.dialog.alert(data.message, 'Transfer Bonus');
     }
   });
@@ -676,6 +681,7 @@ $$('#bank-trf .btnBankTrf').on('click', function(e){
       app.popup.close($$('.page[data-name="bank-trf"]').parents(".popup"));
 
     } else {
+      $$('#bank-trf [name="pin"]').val('');
       app.dialog.alert(data.message, 'Bank Transfer Withdrawal');
     }
   });
@@ -740,7 +746,7 @@ $$('#withdrawal .btnWithdraw').on('click', function(e){
       
       app.popup.close($$('.page[data-name="withdrawal"]').parents(".popup"));
     } else {
-      
+      $$('#withdrawal [name="pin"]').val('');
       app.dialog.alert(data.message, 'Withdrawal');
     }
   });

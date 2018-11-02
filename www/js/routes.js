@@ -1127,6 +1127,12 @@ routes = [
             return;
           }
           
+          var pin = $$('#pin').val();
+          if (pin === '') {
+            app.dialog.alert('Masukkan nomor PIN anda.', 'Transfer Saldo');
+            return;
+          }
+                  
           app.preloader.show();
 
           var formData = app.form.convertToData('.trfsaldo');
@@ -1143,6 +1149,7 @@ routes = [
             if (data.status) {
               app.router.back();
             } else {
+              $$('#pin').val('');
               app.dialog.alert(data.message, 'Transfer Saldo');
             }
           });
