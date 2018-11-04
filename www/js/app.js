@@ -299,7 +299,7 @@ var ac_share = app.actions.create({
     '</div></li></ul></div>',
       onClick: function () {
         var msg = 'Ayo berbagi cepek dan dapatkan berbagai keuntungan lewat aplikasi ini!\n\n' +
-        'https://play.google.com/store/apps/details?id=com.app.abc';
+        'https://play.google.com/store/apps/details?id=com.app.berbagi.cepek';
         window.plugins.socialsharing.shareViaWhatsApp(msg, null, null, null, function(e){
           app.dialog.alert("Sharing failed with message: " + e, "ABC");
         })
@@ -317,7 +317,7 @@ var ac_share = app.actions.create({
     '</div></li></ul></div>',
       onClick: function () {
         var msg = 'Ayo berbagi cepek dan dapatkan berbagai keuntungan lewat aplikasi ini!\n\n' +
-        'https://play.google.com/store/apps/details?id=com.app.abc';
+        'https://play.google.com/store/apps/details?id=com.app.berbagi.cepek';
         window.plugins.socialsharing.shareVia('org.telegram.messenger', msg, null, null, null, null, function(e){
           app.dialog.alert('Sharing failed with message: ' + e, 'ABC');
         })
@@ -335,7 +335,7 @@ var ac_share = app.actions.create({
     '</div></li></ul></div>',
       onClick: function () {
         var msg = 'Ayo berbagi cepek dan dapatkan berbagai keuntungan lewat aplikasi ini!\n\n' +
-        'https://play.google.com/store/apps/details?id=com.app.abc';
+        'https://play.google.com/store/apps/details?id=com.app.berbagi.cepek';
         window.plugins.socialsharing.shareViaFacebook(msg, null, null, null, function(e){
           app.dialog.alert("Sharing failed with message: " + e, "ABC");
         })
@@ -353,7 +353,7 @@ var ac_share = app.actions.create({
     '</div></li></ul></div>',
       onClick: function () {
         var msg = 'Ayo berbagi cepek dan dapatkan berbagai keuntungan lewat aplikasi ini!' +
-        'https://play.google.com/store/apps/details?id=com.app.abc';
+        'https://play.google.com/store/apps/details?id=com.app.berbagi.cepek';
         window.plugins.socialsharing.shareViaTwitter(msg, null, 'https://twitter.com/', null, function(e){
           app.dialog.alert("Sharing failed with message: " + e, "ABC");
         })

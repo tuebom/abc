@@ -1038,7 +1038,6 @@ routes = [
 
           var formData = app.form.convertToData('.pendaftaran');
           formData.mbrid = app.data.mbrid;
-          // console.log(formData)
           
           app.request.post('http://212.24.111.23/abc/member', formData, function (res) { //212.24.111.23
             
@@ -1049,9 +1048,23 @@ routes = [
             if (data.status) {
               
               app.dialog.alert(data.message, 'Registrasi Member');
-              // setTimeout(function () {
-                app.router.back();
-              // }, 2000);
+              app.router.back();
+
+              // ambil informasi saldo member
+              app.request.get('http://212.24.111.23/abc/member/saldo/'+app.data.mbrid, function (res) {
+                  
+                var data = JSON.parse(res);
+            
+                if (data.status) {
+                  $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
+                  app.data.saldo = parseInt(data.saldo);
+                  $$('.bonus').text(parseInt(data.bonus).toLocaleString('ID'));
+                  app.data.bonus = parseInt(data.bonus);
+                } else {
+                  app.dialog.alert(data.message);
+                }
+              });
+
             } else {
               app.dialog.alert(data.message, 'Pendaftaran Member');
             }
@@ -1147,7 +1160,23 @@ routes = [
             var data = JSON.parse(res);
         
             if (data.status) {
+              
               app.router.back();
+
+              // ambil informasi saldo member
+              app.request.get('http://212.24.111.23/abc/member/saldo/'+app.data.mbrid, function (res) {
+                  
+                var data = JSON.parse(res);
+            
+                if (data.status) {
+                  $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
+                  app.data.saldo = parseInt(data.saldo);
+                  $$('.bonus').text(parseInt(data.bonus).toLocaleString('ID'));
+                  app.data.bonus = parseInt(data.bonus);
+                } else {
+                  app.dialog.alert(data.message);
+                }
+              });
             } else {
               $$('#pin').val('');
               app.dialog.alert(data.message, 'Transfer Saldo');
